@@ -26,7 +26,7 @@ app.css.append_css({"external_url": "https://codepen.io/chriddyp/pen/bWLwgP.css"
 
 ####### Layout of the app ########
 app.layout = html.Div([
-    html.H3('2016 Presidential Elecction: Vote Totals by Jurisdiction'),
+    html.H3('2016 Presidential Election: Vote Totals by Jurisdiction'),
     dcc.Dropdown(
         id='dropdown',
         options=[{'label': i, 'value': i} for i in options_list],
