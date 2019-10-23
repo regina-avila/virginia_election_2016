@@ -3,26 +3,19 @@ import dash
 import dash_core_components as dcc
 import dash_html_components as html
 import pandas as pd
-import plotly.plotly as py
+import plotly as py
 import plotly.graph_objs as go
 from plotly.graph_objs import *
 
-
 ###### Import a dataframe #######
+df = pd.read_pickle('virginia_totals.pkl')
+options_list=list(df['jurisdiction'].value_counts().sort_index().index)
 
-df0 = pd.read_csv('Virginia.csv')
-df1=df0[['county_name', 'jurisdiction', 'precinct', 'candidate', 'votes']]
-df1.loc[(df1['candidate']!='Hillary Clinton') & (df1['candidate']!='Donald Trump'), 'candidate']='Other'
-df2=df1.groupby(['county_name', 'jurisdiction', 'precinct', 'candidate']).sum()
-df3=df2.unstack(level=-1)
-df4=df3.reset_index()
-options_list=list(df4['jurisdiction'].value_counts().sort_index().index)
-####### Set up your app #####
-app = dash.Dash(__name__)
+########### Initiate the app
+external_stylesheets = ['https://codepen.io/chriddyp/pen/bWLwgP.css']
+app = dash.Dash(__name__, external_stylesheets=external_stylesheets)
 server = app.server
 app.title='VA 2016'
-app.css.append_css({"external_url": "https://codepen.io/chriddyp/pen/bWLwgP.css"})
-
 
 ####### Layout of the app ########
 app.layout = html.Div([
@@ -43,7 +36,7 @@ app.layout = html.Div([
 @app.callback(dash.dependencies.Output('display-value', 'figure'),
               [dash.dependencies.Input('dropdown', 'value')])
 def juris_picker(juris_name):
-    juris_df=df4[df4['jurisdiction']==juris_name]
+    juris_df=df[df['jurisdiction']==juris_name]
 
     mydata1 = go.Bar(x=list(juris_df['precinct'].value_counts().index),
                      y=list(juris_df['votes']['Donald Trump']),
