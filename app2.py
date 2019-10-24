@@ -18,24 +18,6 @@ import json
 with urlopen('https://raw.githubusercontent.com/plotly/datasets/master/geojson-counties-fips.json') as response:
     counties = json.load(response)
 
-juris_name=options_list[10]
-df['selected']=np.where(df['jurisdiction']==juris_name, 1, 0)
-fig = go.Figure(go.Choroplethmapbox(geojson=counties,
-                                    locations=df['FIPS'],
-                                    z=df['selected'],
-                                    # colorscale=['blues'],
-                                    text=df['county_name'],
-                                    hoverinfo="text",
-                                    zmin=0,
-                                    zmax=1,
-                                    marker_line_width=.5
-                                    ))
-fig.update_layout(mapbox_style="carto-positron",
-                  mapbox_zoom=5.8,
-                  mapbox_center = {"lat": 38.0293, "lon": -79.4428})
-fig.update_layout(margin={"r":0,"t":0,"l":0,"b":0})
-
-
 ########### Initiate the app
 external_stylesheets = ['https://codepen.io/chriddyp/pen/bWLwgP.css']
 app = dash.Dash(__name__, external_stylesheets=external_stylesheets)

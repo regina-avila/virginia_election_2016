@@ -34,8 +34,8 @@ app.layout = html.Div([
         value=options_list[10]
     ),
     html.Br(),
-    dcc.Graph(id='display-value'),
     dcc.Graph(id='display-map'),
+    dcc.Graph(id='display-value'),
     html.Br(),
     html.A('Code on Github', href='https://github.com/austinlasseter/virginia_election_2016'),
     html.Br(),
