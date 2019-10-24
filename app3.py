@@ -6,6 +6,7 @@ import pandas as pd
 import plotly as py
 import plotly.graph_objs as go
 from plotly.graph_objs import *
+import numpy as np
 
 ###### Import a dataframe #######
 df = pd.read_pickle('virginia_totals.pkl')
@@ -30,7 +31,7 @@ app.layout = html.Div([
     dcc.Dropdown(
         id='dropdown',
         options=[{'label': i, 'value': i} for i in options_list],
-        value=options_list[0]
+        value=options_list[10]
     ),
     html.Br(),
     dcc.Graph(id='display-value'),
@@ -71,24 +72,26 @@ def juris_picker(juris_name):
 
 
 
-######### Callback #1 #########
+######### Callback #2 #########
 @app.callback(dash.dependencies.Output('display-map', 'figure'),
               [dash.dependencies.Input('dropdown', 'value')])
 def juris_highlighter(juris_name):
-    df['selected']=0
-    df.loc[df['jurisdiction']==juris_name, 'selected']=1
+    df['selected']=np.where(df['jurisdiction']==juris_name, 1, 0)
     fig = go.Figure(go.Choroplethmapbox(geojson=counties,
                                         locations=df['FIPS'],
                                         z=df['selected'],
-                                        colorscale=['Gray', 'Yellow'],
-                                        # text=df['county_name'],
+                                        # colorscale=['blues'],
+                                        text=df['county_name'],
+                                        hoverinfo='text',
                                         zmin=0,
                                         zmax=1,
-                                        marker_line_width=.5))
+                                        marker_line_width=.5
+                                        ))
     fig.update_layout(mapbox_style="carto-positron",
                       mapbox_zoom=5.8,
                       mapbox_center = {"lat": 38.0293, "lon": -79.4428})
     fig.update_layout(margin={"r":0,"t":0,"l":0,"b":0})
+    return fig
 
 
 
